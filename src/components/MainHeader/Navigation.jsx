@@ -1,8 +1,13 @@
 import './Navigation.css'
 import Button from '../UI/Button'
 
+import AuthContext from '../../store/auth-contect'
+
 const Navigation = (props) => {
     return (
+        <AuthContext.Consumer>
+        {(context) => {
+        return(
         <nav className='nav'>
             <ul>
                 <li>
@@ -13,11 +18,15 @@ const Navigation = (props) => {
                 </li>
                 {props.loggedIn && (
                     <li>
-                        <Button onClick={props.onLogout}>Logout</Button>
+                        <Button onClick={props.onLogout}>Logout
+                        </Button>
                     </li>
                 )}
             </ul>
         </nav>
+        )
+        }}
+        </AuthContext.Consumer>
     )
 }
 
