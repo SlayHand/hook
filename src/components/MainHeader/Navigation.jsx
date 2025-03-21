@@ -3,7 +3,7 @@ import Button from '../UI/Button'
 
 import AuthContext from '../../store/auth-contect'
 
-const Navigation = (props) => {
+const Navigation = () => {
     return (
         <AuthContext.Consumer>
         {(context) => {
@@ -16,10 +16,9 @@ const Navigation = (props) => {
                 <li>
                     <a href="/admin">Admin</a>
                 </li>
-                {props.loggedIn && (
+                {context.loggedIn && (
                     <li>
-                        <Button onClick={props.onLogout}>Logout
-                        </Button>
+                        <Button onClick={context.onLogout}>Logout</Button>
                     </li>
                 )}
             </ul>
