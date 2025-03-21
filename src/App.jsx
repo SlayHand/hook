@@ -1,35 +1,50 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { Fragment, useEffect, useState } from "react";
+import MainHeader from "./components/MainHeader/MainHeader";
+import Login from './components/Login/Login'
+import Home from "./components/Home/Home";
 
 function App() {
-  const [count, setCount] = useState(0)
+
+  const[loggedIn, setLoggedIn] = useState(() => {
+    if(JSON.parse(localStorage.getItem('isLoggedUser'))!==null) {
+      return JSON.parse(localStorage.getItem('isLoggedUser')).isLogged
+    } else {
+      return false;
+    }
+  })
+
+  console.log(loggedIn)
+
+  useEffect(() => {
+    const storedLoggedUserData = JSON.parse(localStorage.getItem('isLoggedUser'))
+    if(storedLoggedUserData !== null){
+      if(storedLoggedUserData.isLogged === true){
+        setLoggedIn(true)
+      }
+    }
+  }, [])
+
+  const loginHandler = (user, password) => {
+    const isLoggedUser = localStorage.setItem('isLoggedUser', JSON.stringify({
+      username: user,
+      isLogged: true
+    }))
+    setLoggedIn(true)
+  }
+
+  const logoutHandler = () => {
+    localStorage.removeItem('isLoggedUser')
+    setLoggedIn(false)
+  }
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    <Fragment>
+      <MainHeader isAuthenticated={loggedIn} onLogout={logoutHandler}/>
+      <main>
+        {!loggedIn && <Login onLogin={loginHandler}/>}
+        {loggedIn && <Home/>}
+      </main>
+    </Fragment>
+  );
 }
-
 export default App
